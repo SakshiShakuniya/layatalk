@@ -1,6 +1,12 @@
 function normalizeBase(input?: string | null): string {
-  const raw = (input || '').trim()
+  let raw = (input || '').trim()
   if (!raw) return 'http://localhost:8000'
+
+  // Ensure protocol if missing, assuming https for production if not localhost
+  if (!/^https?:\/\//i.test(raw)) {
+    raw = (raw.includes('localhost') || raw.includes('127.0.0.1')) ? `http://${raw}` : `https://${raw}`
+  }
+
   try {
     const u = new URL(raw)
     const host = (u.hostname || '').toLowerCase()
