@@ -186,11 +186,30 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, 
-      rgba(232, 121, 249, 0.1) 0%, 
-      rgba(217, 70, 239, 0.15) 50%, 
-      rgba(168, 85, 247, 0.1) 100%);
+    background: none;
     pointer-events: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-button {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 999;
+  }
+
+  .blog-page {
+    padding: 1rem;
+  }
+
+  .blog-page .blog-post {
+    padding: 1rem;
+  }
+
+  .blog-page .blog-post img {
+    max-width: 100%;
+    height: auto;
   }
 }
 

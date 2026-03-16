@@ -118,7 +118,7 @@ export default function BlogForm({ id }: { id?: number }) {
         setSaving(false)
         return
       }
-      router.push('/admin/blogs')
+      window.location.href = '/admin/blogs/'
     } catch (err: any) {
       console.error('Save blog exception:', err)
       setError(err.message || 'Something went wrong')
@@ -198,7 +198,7 @@ export default function BlogForm({ id }: { id?: number }) {
         </button>
         <button
           type='button'
-          onClick={() => router.push('/admin/blogs')}
+          onClick={() => window.location.href = '/admin/blogs/'}
           className='inline-flex items-center justify-center min-w-[140px] px-4 py-3 rounded-xl border border-[#123057] bg-transparent text-white'
         >
           Cancel

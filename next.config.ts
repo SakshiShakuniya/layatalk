@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: '**' },
     ],
   },
+  generateEtags: false,
   async redirects() {
     return [
       {

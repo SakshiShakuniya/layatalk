@@ -8,7 +8,9 @@
         body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: #0a0112; color: #fff; margin: 0; }
         .wrap { max-width: 720px; margin: 40px auto; padding: 24px; }
         input, textarea, select { width: 100%; padding: 10px; margin: 8px 0; border-radius: 8px; border: 1px solid #3b0b4f; background: #1a0524; color: #fff; }
-        button, a.btn { display: inline-block; padding: 10px 16px; border-radius: 8px; border: 1px solid #e879f9; color: #0a0112; background: #e879f9; text-decoration: none; }
+        button, a.btn { display: inline-block; padding: 10px 16px; border-radius: 8px; border: 1px solid #e879f9; color: #0a0112; background: #e879f9; text-decoration: none; width: 100px; text-align: center; }
+        input[type="file"] { background: transparent; border: 1px solid #3b0b4f; padding: 10px; border-radius: 8px; }
+        .form-buttons { display: flex; gap: 1rem; }
     </style>
 </head>
 <body>
@@ -23,8 +25,10 @@
                 <option value="published">Published</option>
             </select>
             <input id="image" type="file" accept="image/*" />
-            <button type="submit">Update</button>
-            <a class="btn" href="/admin/blogs">Back</a>
+            <div class="form-buttons">
+                <button type="submit" class="btn">Update</button>
+                <a class="btn" href="/admin/blogs">Back</a>
+            </div>
         </form>
     </div>
     <script>

@@ -2,7 +2,7 @@
 import Logo from './Logo';
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { headerData } from './Navigation/menuData'
 import HeaderLink from './Navigation/HeaderLink'
 import MobileHeaderLink from './Navigation/MobileHeaderLink'
@@ -10,11 +10,19 @@ import MobileHeaderLink from './Navigation/MobileHeaderLink'
 const Header: React.FC = () => {
   const [navbarOpen, setNavbarOpen] = useState(false)
   const [sticky, setSticky] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
 
   const handleScroll = () => {
     setSticky(window.scrollY >= 80)
   }
+
+  useEffect(() => {
+    // Check for token on route change or mount
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+    setIsLoggedIn(!!token)
+  }, [pathname])
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll)
@@ -37,7 +45,7 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 z-40 w-full pb-5 transition-all duration-300 ${
+      className={`fixed top-0 z-[9999] w-full pb-5 transition-all duration-300 ${
         sticky ? ' shadow-lg bg-darkmode pt-5' : 'shadow-none md:pt-14 pt-5'
       }`}>
       <div className='lg:py-0 py-2'>
@@ -49,11 +57,11 @@ const Header: React.FC = () => {
             ))}
           </nav>
           <div className='flex items-center gap-4'>
-            <Link
-              href='/admin/login'
-              className='hidden lg:block text-white hover:text-primary px-3 py-2 rounded-lg border border-transparent hover:border-primary'>
-              Admin
-            </Link>
+            <a
+              href={isLoggedIn ? '/admin/dashboard/' : '/admin/login/'}
+              className='lg:block text-white hover:text-primary px-3 py-2 rounded-lg border border-transparent hover:border-primary transition-colors'>
+              {isLoggedIn ? 'Dashboard' : 'Admin'}
+            </a>
             <Link
               href='https://play.google.com/store/apps/details?id=com.ahaagroup.ahaavoice&hl=en_IN'
               target='_blank'
@@ -93,17 +101,17 @@ const Header: React.FC = () => {
             ))}
             <div className='mt-4 w-full'>
               <Link
-                href='/admin/login'
-                className='text-white px-4 py-2 rounded-lg border border-primary/50 block text-center mb-3'>
-                Admin
-              </Link>
-              <Link
                 href='https://play.google.com/store/apps/details?id=com.ahaagroup.ahaavoice&hl=en_IN'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 block text-center'>
+                className='bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 block text-center mb-3'>
                 Get the App
               </Link>
+              <a
+                href={isLoggedIn ? '/admin/dashboard/' : '/admin/login/'}
+                className='text-white px-4 py-2 rounded-lg border border-primary/50 block text-center admin-button transition-colors'>
+                {isLoggedIn ? 'Dashboard' : 'Admin'}
+              </a>
             </div>
           </nav>
         </div>

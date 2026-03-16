@@ -33,7 +33,7 @@ export default function AdminBlogsPage() {
         cache: 'no-store',
       })
       if (res.status === 401) {
-        router.push('/admin/login')
+        window.location.href = '/admin/login/'
         return
       }
       const data = await res.json()
@@ -73,16 +73,16 @@ export default function AdminBlogsPage() {
       <div className='max-w-[1000px] mx-auto'>
         <div className='flex items-center justify-between mb-8'>
           <div className='flex items-center gap-4'>
-            <Link href='/admin/dashboard' className='text-primary hover:underline'>
+            <a href='/admin/dashboard' className='text-primary hover:underline'>
               ← Dashboard
-            </Link>
+            </a>
             <h1 className='text-32 font-bold'>Manage Blogs</h1>
           </div>
-          <Link
-            href='/admin/blogs/create'
+          <a
+            href='/admin/blogs/create/'
             className='bg-primary text-white font-bold px-6 py-2 rounded-xl hover:brightness-105 transition-all'>
             Create New Blog
-          </Link>
+          </a>
         </div>
 
         {loading ? (
@@ -90,9 +90,9 @@ export default function AdminBlogsPage() {
         ) : blogs.length === 0 ? (
           <div className='bg-darklight p-12 rounded-2xl border border-dark_border/20 text-center'>
             <p className='text-muted/60 mb-4'>No blogs found in the database.</p>
-            <Link href='/admin/blogs/create' className='text-primary font-medium hover:underline'>
+            <a href='/admin/blogs/create/' className='text-primary font-medium hover:underline'>
               Create your first blog
-            </Link>
+            </a>
           </div>
         ) : (
           <div className='bg-darklight rounded-2xl border border-dark_border/20 overflow-hidden'>
@@ -124,11 +124,11 @@ export default function AdminBlogsPage() {
                     </td>
                     <td className='p-4'>
                       <div className='flex gap-3'>
-                        <Link
-                          href={`/admin/blogs/${blog.id}/edit`}
+                        <a
+                          href={`/admin/blogs/${blog.id}/edit/`}
                           className='text-primary hover:underline font-medium'>
                           Edit
-                        </Link>
+                        </a>
                         <button
                           onClick={() => handleDelete(blog.id)}
                           className='text-error hover:underline font-medium'>

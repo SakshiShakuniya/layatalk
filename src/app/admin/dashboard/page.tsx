@@ -38,7 +38,7 @@ export default function AdminDashboardPage() {
 
   const handleLogout = () => {
     localStorage.removeItem('token')
-    router.push('/')
+    window.location.href = '/'
   }
 
   return (
@@ -47,16 +47,16 @@ export default function AdminDashboardPage() {
         <div className='flex items-center justify-between mb-8'>
           <h1 className='text-32 font-bold'>Dashboard</h1>
           <div className='flex gap-4'>
-            <Link
-              href='/admin/blogs'
+            <a
+              href='/admin/blogs/'
               className='bg-primary text-white font-bold px-6 py-2 rounded-xl hover:brightness-105 transition-all'>
               Manage Blogs
-            </Link>
-            <Link
-              href='/admin/blogs/create'
+            </a>
+            <a
+              href='/admin/blogs/create/'
               className='border border-primary text-primary font-bold px-6 py-2 rounded-xl hover:bg-primary/10 transition-all'>
               Create Blog
-            </Link>
+            </a>
             <button
               onClick={handleLogout}
               className='border border-error text-error px-6 py-2 rounded-xl hover:bg-error/10 transition-all'>
