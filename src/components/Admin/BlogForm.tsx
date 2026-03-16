@@ -53,7 +53,10 @@ export default function BlogForm({ id }: { id?: number }) {
     ;(async () => {
       try {
         const res = await fetch(`${API_BASE}/api/admin/blogs`, {
-          headers: { Authorization: 'Bearer ' + token },
+          headers: { 
+            Authorization: 'Bearer ' + token,
+            'Accept': 'application/json'
+          },
           cache: 'no-store',
         })
         if (res.status === 401) {
@@ -99,35 +102,26 @@ export default function BlogForm({ id }: { id?: number }) {
         method,
         headers: {
           Authorization: 'Bearer ' + token,
+          'Accept': 'application/json'
         },
         body: fd,
       })
       if (!res.ok) {
-        try {
-          const payload: unknown = await res.json()
-          let msg: string | undefined
-          if (payload && typeof payload === 'object') {
-            const obj = payload as Record<string, unknown>
-            if (typeof obj.message === 'string') {
-              msg = obj.message
-            } else if (obj.errors && typeof obj.errors === 'object') {
-              const errs = obj.errors as Record<string, unknown>
-              const first = Object.values(errs)[0]
-              if (Array.isArray(first) && typeof first[0] === 'string') {
-                msg = first[0]
-              }
-            }
-          }
-          setError(msg || `Failed to ${isEdit ? 'update' : 'create'} blog`)
-        } catch {
-          setError(`Failed to ${isEdit ? 'update' : 'create'} blog`)
+        const payload: any = await res.json().catch(() => ({}))
+        console.error('Save blog error response:', payload)
+        let msg = payload.message || payload.error || `Failed to ${isEdit ? 'update' : 'create'} blog`
+        if (payload.errors) {
+          const first = Object.values(payload.errors)[0]
+          if (Array.isArray(first)) msg = first[0]
         }
+        setError(msg)
         setSaving(false)
         return
       }
       router.push('/admin/blogs')
-    } catch {
-      setError('Something went wrong')
+    } catch (err: any) {
+      console.error('Save blog exception:', err)
+      setError(err.message || 'Something went wrong')
     } finally {
       setSaving(false)
     }

@@ -16,7 +16,7 @@ class AdminAuthController extends Controller
         if (!Auth::attempt($credentials)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
-        $user = $request->user();
+        $user = \App\Models\User::where('email', $credentials['email'])->first();
         $token = $user->createToken('admin-token')->plainTextToken;
         return response()->json([
             'token' => $token,

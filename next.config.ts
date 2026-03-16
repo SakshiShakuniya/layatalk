@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  output: 'export',
+  distDir: 'out',
+  trailingSlash: true,
   reactStrictMode: true,
   images: {
     unoptimized: true,
@@ -13,7 +16,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/favicon.ico',
-        destination: '/images/logo/logo.svg',
+        destination: '/images/logo/layatalklogo.webp',
         permanent: false,
       },
     ]

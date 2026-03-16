@@ -1,19 +1,14 @@
-'use client'
-import BlogForm from '@/components/Admin/BlogForm'
-import { useParams } from 'next/navigation'
+import EditBlogClient from './EditBlogClient'
 
-export default function EditBlogPage() {
-  const params = useParams()
-  const idParam = params?.id
-  const id = typeof idParam === 'string' ? parseInt(idParam, 10) : Array.isArray(idParam) ? parseInt(idParam[0], 10) : NaN
-  return (
-    <main className='min-h-screen bg-darkmode text-white p-6'>
-      <div className='max-w-[960px] mx-auto'>
-        <h1 className='text-36 font-bold mb-4'>Edit Blog</h1>
-        <div className='rounded-xl border border-[#3b0b4f] p-4'>
-          {!isNaN(id) ? <BlogForm id={id} /> : <div>Invalid blog id</div>}
-        </div>
-      </div>
-    </main>
-  )
+export async function generateStaticParams() {
+  // For static export of an admin page, we return at least one path
+  // so that the build system generates the HTML template.
+  return [{ id: '1' }]
+}
+
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  const id = parseInt(resolvedParams.id, 10);
+  
+  return <EditBlogClient id={id} />
 }

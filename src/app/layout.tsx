@@ -12,7 +12,7 @@ const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'
 export const metadata: Metadata = {
   title: 'Laya Talk',
   icons: {
-    icon: '/images/logo/logo.svg',
+    icon: '/images/logo/layatalklogo.webp',
   },
 }
 

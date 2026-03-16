@@ -1,6 +1,13 @@
 function normalizeBase(input?: string | null): string {
   let raw = (input || '').trim()
-  if (!raw) return 'http://localhost:8000'
+  if (!raw) {
+    if (typeof window !== 'undefined' && 
+        window.location.hostname !== 'localhost' && 
+        window.location.hostname !== '127.0.0.1') {
+      return window.location.origin
+    }
+    return 'http://localhost:8000'
+  }
 
   // Ensure protocol if missing, assuming https for production if not localhost
   if (!/^https?:\/\//i.test(raw)) {
@@ -22,6 +29,11 @@ function normalizeBase(input?: string | null): string {
 
 export const API_BASE = normalizeBase(process.env.NEXT_PUBLIC_API_BASE_URL)
 
+if (typeof window !== 'undefined') {
+  console.log('API_BASE is set to:', API_BASE)
+  console.log('Hostname is:', window.location.hostname)
+}
+
 export function getToken(): string | null {
   if (typeof window === 'undefined') return null
   return localStorage.getItem('token')
@@ -33,6 +45,7 @@ export async function fetchAdmin<T = unknown>(path: string, init: RequestInit = 
     ...init,
     headers: {
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
       ...(init.headers || {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },

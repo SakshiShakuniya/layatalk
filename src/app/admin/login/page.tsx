@@ -1,29 +1,25 @@
 'use client'
-
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { API_BASE } from '@/utils/adminApi'
 
-export default function AdminLogin() {
-  const router = useRouter()
+export default function AdminLoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [remember, setRemember] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
   const [msg, setMsg] = useState('')
-  const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
-    const saved = localStorage.getItem('adminRememberEmail')
-    if (saved) {
-      setEmail(saved)
-      setRemember(true)
+    const savedEmail = localStorage.getItem('admin_email')
+    if (savedEmail) {
+      setEmail(savedEmail)
+      setRememberMe(true)
     }
   }, [])
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setMsg('')
-    setLoading(true)
     try {
       const res = await fetch(`${API_BASE}/api/admin/login`, {
         method: 'POST',
@@ -32,69 +28,70 @@ export default function AdminLogin() {
       })
       if (!res.ok) {
         setMsg('Invalid credentials')
-        setLoading(false)
         return
       }
       const data = await res.json()
-      if (remember) {
-        localStorage.setItem('adminRememberEmail', email)
-      } else {
-        localStorage.removeItem('adminRememberEmail')
+      if (!data.token) {
+        setMsg('Login failed: Token not received')
+        return
       }
       localStorage.setItem('token', data.token)
+      if (rememberMe) {
+        localStorage.setItem('admin_email', email)
+      } else {
+        localStorage.removeItem('admin_email')
+      }
       router.push('/admin/dashboard')
-    } catch {
-      setMsg('Unable to login')
-    } finally {
-      setLoading(false)
+    } catch (err) {
+      console.error('Login error:', err)
+      setMsg('Connection error: ' + (err as any).message)
     }
   }
 
   return (
-    <main className='min-h-screen grid place-items-center bg-darkmode text-white p-6'>
-      <div className='w-[92%] max-w-[420px] rounded-2xl border border-[#123057] bg-linear-to-b from-[#0b1b3a]/95 to-[#081127]/95 p-7 shadow-[0_10px_30px_rgba(0,0,0,.35)]'>
-        <h2 className='text-24 font-semibold mb-1'>Admin Login</h2>
-        <p className='text-13 text-[#94a3b8] mb-3'>Access your dashboard to manage blogs</p>
-        <form onSubmit={onSubmit}>
-          <div className='mb-3'>
+    <main className='min-h-screen bg-darkmode flex items-center justify-center p-6'>
+      <div className='w-full max-w-[420px] bg-gradient-to-b from-darklight/95 to-darkmode/95 p-8 rounded-2xl border border-dark_border/20 shadow-2xl'>
+        <h2 className='text-white text-24 font-bold mb-2'>Admin Login</h2>
+        <p className='text-muted/60 text-13 mb-6'>Access your dashboard to manage blogs</p>
+        <form onSubmit={handleSubmit}>
+          <div className='mb-4'>
             <input
+              type='email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              type='email'
               placeholder='Email'
-              autoComplete='username'
-              className='w-full rounded-xl border border-[#123057] bg-[#081127] text-white px-3 py-3 outline-none focus:border-[#3b82f6] focus:ring-4 focus:ring-[#3b82f6]/15'
+              className='w-full bg-darkmode border border-dark_border/20 text-white p-3 rounded-xl focus:border-primary outline-none'
               required
             />
           </div>
-          <div className='mb-3'>
+          <div className='mb-6'>
             <input
+              type='password'
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              type='password'
               placeholder='Password'
-              autoComplete='current-password'
-              className='w-full rounded-xl border border-[#123057] bg-[#081127] text-white px-3 py-3 outline-none focus:border-[#3b82f6] focus:ring-4 focus:ring-[#3b82f6]/15'
+              className='w-full bg-darkmode border border-dark_border/20 text-white p-3 rounded-xl focus:border-primary outline-none'
               required
             />
           </div>
-          <div className='mb-3 flex items-center gap-2'>
+          <div className='mb-6 flex items-center'>
             <input
-              id='remember'
+              id='remember-me'
               type='checkbox'
-              checked={remember}
-              onChange={(e) => setRemember(e.target.checked)}
-              className='h-4 w-4 rounded border-[#123057] bg-[#081127] accent-[#3b82f6]'
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className='h-4 w-4 rounded border-dark_border/30 bg-darkmode text-primary focus:ring-primary focus:ring-offset-darkmode'
             />
-            <label htmlFor='remember' className='text-14 text-[#94a3b8]'>Remember me</label>
+            <label htmlFor='remember-me' className='ml-2 block text-14 text-muted/80 cursor-pointer'>
+              Remember me
+            </label>
           </div>
           <button
             type='submit'
-            disabled={loading}
-            className='w-full rounded-xl bg-linear-to-r from-[#3b82f6] to-[#60a5fa] text-darkmode font-semibold px-4 py-3 border border-[#3b82f6] hover:brightness-105 disabled:opacity-60'>
-            {loading ? 'Logging in...' : 'Login'}
+            className='w-full bg-primary text-white font-bold p-3 rounded-xl hover:brightness-105 transition-all'>
+            Login
           </button>
-          <div className='mt-3 text-[#60a5fa] text-14 min-h-[18px]'>{msg}</div>
+          {msg && <p className='mt-4 text-error text-14'>{msg}</p>}
         </form>
       </div>
     </main>

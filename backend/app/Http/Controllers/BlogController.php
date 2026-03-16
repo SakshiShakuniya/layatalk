@@ -32,31 +32,54 @@ class BlogController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'title' => ['required','string','max:255'],
-            'description' => ['nullable','string','max:500'],
-            'content' => ['required','string'],
-            'status' => ['required','in:published,draft'],
-            'featured_image' => ['nullable','image','max:10240'],
+        Log::info('Store blog attempt', [
+            'data' => $request->except(['featured_image']),
+            'has_image' => $request->hasFile('featured_image'),
+            'user_id' => $request->user()?->id,
         ]);
 
-        $data['slug'] = Str::slug($data['title']);
-        if (Blog::where('slug', $data['slug'])->exists()) {
-            $data['slug'] .= '-'.Str::random(6);
+        try {
+            $data = $request->validate([
+                'title' => ['required', 'string', 'max:255'],
+                'description' => ['nullable', 'string', 'max:500'],
+                'content' => ['required', 'string'],
+                'status' => ['required', 'in:published,draft'],
+                'featured_image' => ['nullable', 'image', 'max:10240'],
+            ]);
+
+            $data['slug'] = Str::slug($data['title']);
+            if (Blog::where('slug', $data['slug'])->exists()) {
+                $data['slug'] .= '-' . Str::random(6);
+            }
+
+            if ($request->hasFile('featured_image')) {
+                $path = $request->file('featured_image')->store('blogs', 'public');
+                $data['featured_image'] = '/storage/' . $path;
+                Log::info('Stored new image', ['path' => $data['featured_image']]);
+            }
+
+            // Ensure we have a user, or handle case where auth is missing but middleware passed
+            $user = $request->user();
+            if (!$user) {
+                Log::error('Store blog failed: User not authenticated despite middleware');
+                return response()->json(['message' => 'User not authenticated'], 401);
+            }
+
+            $data['user_id'] = $user->id;
+            $blog = Blog::create($data);
+
+            Log::info('Blog created successfully', ['id' => $blog->id]);
+            return response()->json($blog->fresh(), 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::warning('Store blog validation failed', ['errors' => $e->errors()]);
+            return response()->json(['message' => 'Validation failed', 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            Log::error('Store blog general error', [
+                'msg' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json(['message' => 'An unexpected error occurred: ' . $e->getMessage()], 500);
         }
-        if ($request->hasFile('featured_image')) {
-            $path = $request->file('featured_image')->store('blogs', 'public');
-            $data['featured_image'] = '/storage/' . $path;
-            Log::info('Stored new image in store', ['path' => $data['featured_image']]);
-        }
-        $data['user_id'] = $request->user()->id;
-        $blog = Blog::create($data);
-        Log::info('Blog created', [
-            'id' => $blog->id,
-            'hasFile' => $request->hasFile('featured_image'),
-            'featured_image' => $blog->featured_image,
-        ]);
-        return response()->json($blog->fresh(), 201);
     }
 
     public function update(Request $request, int $id)

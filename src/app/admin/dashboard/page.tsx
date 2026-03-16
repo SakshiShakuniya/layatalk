@@ -1,70 +1,78 @@
 'use client'
-
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { API_BASE } from '@/utils/adminApi'
-import type { ApiBlog } from '@/utils/blogApi'
-import { Icon } from '@iconify/react'
+import Link from 'next/link'
+import { API_BASE, getToken } from '@/utils/adminApi'
 
-export default function AdminDashboard() {
+export default function AdminDashboardPage() {
+  const [blogCount, setBlogCount] = useState(0)
   const router = useRouter()
-  const [count, setCount] = useState<number>(0)
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = getToken()
     if (!token) {
-      router.replace('/admin/login')
+      router.push('/admin/login')
       return
     }
-    ;(async () => {
+
+    const loadStats = async () => {
       try {
         const res = await fetch(`${API_BASE}/api/admin/blogs`, {
-          headers: { Authorization: 'Bearer ' + token },
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            'Accept': 'application/json'
+          },
         })
         if (res.status === 401) {
-          router.replace('/admin/login')
+          router.push('/admin/login')
           return
         }
-        const data = (await res.json()) as ApiBlog[]
-        setCount(Array.isArray(data) ? data.length : 0)
-      } catch {}
-    })()
+        const data = await res.json()
+        if (Array.isArray(data)) setBlogCount(data.length)
+      } catch (err) {
+        console.error('Stats error', err)
+      }
+    }
+    loadStats()
   }, [router])
 
-  const logout = () => {
+  const handleLogout = () => {
     localStorage.removeItem('token')
     router.push('/')
   }
 
   return (
-    <main className='min-h-screen bg-darkmode text-white p-6'>
+    <main className='min-h-screen bg-darkmode text-white p-12'>
       <div className='max-w-[960px] mx-auto'>
-        <h1 className='text-36 font-bold mb-4'>Dashboard</h1>
-        <div className='flex gap-3 mb-4 items-center'>
-          <a
-            href='/admin/blogs'
-            title='Manage Blogs'
-            className='inline-flex items-center justify-center h-11 w-11 rounded-xl border border-[#3b82f6] bg-[#3b82f6] text-darkmode hover:brightness-105'
-            aria-label='Manage Blogs'
-          >
-            <Icon icon='ion:newspaper-outline' width='22' height='22' />
-          </a>
-          <button
-            onClick={logout}
-            title='Logout'
-            className='inline-flex items-center justify-center h-11 w-11 rounded-xl border border-[#3b82f6] bg-[#3b82f6] text-darkmode hover:brightness-105'
-            aria-label='Logout'
-          >
-            <Icon icon='ion:log-out-outline' width='22' height='22' />
-          </button>
+        <div className='flex items-center justify-between mb-8'>
+          <h1 className='text-32 font-bold'>Dashboard</h1>
+          <div className='flex gap-4'>
+            <Link
+              href='/admin/blogs'
+              className='bg-primary text-white font-bold px-6 py-2 rounded-xl hover:brightness-105 transition-all'>
+              Manage Blogs
+            </Link>
+            <Link
+              href='/admin/blogs/create'
+              className='border border-primary text-primary font-bold px-6 py-2 rounded-xl hover:bg-primary/10 transition-all'>
+              Create Blog
+            </Link>
+            <button
+              onClick={handleLogout}
+              className='border border-error text-error px-6 py-2 rounded-xl hover:bg-error/10 transition-all'>
+              Logout
+            </button>
+          </div>
         </div>
-        <div className='rounded-xl border border-[#123057] bg-[#0b1b3a] p-4 mb-3'>
-          Welcome, Admin
+
+        <div className='bg-darklight p-6 rounded-2xl border border-dark_border/20 mb-8'>
+          <p className='text-18'>Welcome, Admin</p>
         </div>
-        <div className='grid grid-cols-12 gap-3'>
-          <div className='col-span-12 md:col-span-4 rounded-xl border border-[#123057] bg-[#0a1531] p-4'>
-            <div className='text-[#93c5fd] text-12 uppercase tracking-wide'>Blogs</div>
-            <div className='text-32 font-bold mt-1'>{count}</div>
+
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+          <div className='bg-darklight border border-dark_border/20 rounded-2xl p-6'>
+            <p className='text-muted/60 text-12 uppercase tracking-widest mb-2'>Total Blogs</p>
+            <p className='text-40 font-bold'>{blogCount}</p>
           </div>
         </div>
       </div>

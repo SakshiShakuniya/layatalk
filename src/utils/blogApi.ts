@@ -14,27 +14,45 @@ export type ApiBlog = {
 };
 
 export async function fetchBlogs(): Promise<ApiBlog[]> {
-  const res = await fetch(`${API_BASE}/api/blogs`, { cache: 'no-store' });
-  if (!res.ok) return [];
-  const data: ApiBlog[] = await res.json();
-  return data.map(b => ({
-    ...b,
-    featured_image: (() => {
-      const src = b.featured_image || '';
-      if (!src) return src;
-      const absolutized = src.startsWith('/')
-        ? `${API_BASE}${src}`
-        : (/^https?:\/\//i.test(src) || /^data:/i.test(src))
-          ? src
-          : `${API_BASE}/${src.replace(/^\.?\/*/, '')}`;
-      const stamp = Date.parse(b.updated_at || b.created_at || '') || 0;
-      return stamp ? `${absolutized}${absolutized.includes('?') ? '&' : '?'}v=${stamp}` : absolutized;
-    })()
-  }));
+  try {
+    const res = await fetch(`${API_BASE}/api/blogs`, { 
+      cache: 'no-store',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+    if (!res.ok) {
+      console.error(`Failed to fetch blogs: ${res.status} ${res.statusText}`);
+      return [];
+    }
+    const data: ApiBlog[] = await res.json();
+    return data.map(b => ({
+      ...b,
+      featured_image: (() => {
+        const src = b.featured_image || '';
+        if (!src) return src;
+        const absolutized = src.startsWith('/')
+          ? `${API_BASE}${src}`
+          : (/^https?:\/\//i.test(src) || /^data:/i.test(src))
+            ? src
+            : `${API_BASE}/${src.replace(/^\.?\/*/, '')}`;
+        const stamp = Date.parse(b.updated_at || b.created_at || '') || 0;
+        return stamp ? `${absolutized}${absolutized.includes('?') ? '&' : '?'}v=${stamp}` : absolutized;
+      })()
+    }));
+  } catch (error) {
+    console.error('Error in fetchBlogs:', error);
+    return [];
+  }
 }
 
 export async function fetchBlogBySlug(slug: string): Promise<ApiBlog | null> {
-  const res = await fetch(`${API_BASE}/api/blog/${encodeURIComponent(slug)}`, { cache: 'no-store' });
+  const res = await fetch(`${API_BASE}/api/blog/${encodeURIComponent(slug)}`, { 
+    cache: 'no-store',
+    headers: {
+      'Accept': 'application/json'
+    }
+  });
   if (!res.ok) return null;
   const b: ApiBlog = await res.json();
   const absolutize = (html?: string) =>
