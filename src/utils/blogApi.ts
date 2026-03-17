@@ -28,6 +28,7 @@ export async function fetchBlogs(): Promise<ApiBlog[]> {
     const data: ApiBlog[] = await res.json();
     return data.map(b => ({
       ...b,
+      slug: b.slug, // Explicitly preserve the slug
       featured_image: (() => {
         const src = b.featured_image || '';
         if (!src) return src;
