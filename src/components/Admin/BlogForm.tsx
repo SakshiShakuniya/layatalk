@@ -136,7 +136,7 @@ export default function BlogForm({ id }: { id?: number }) {
           onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
           type='text'
           placeholder='Title'
-          className='w-full rounded-xl border border-[#123057] bg-[#081127] text-white px-3 py-3 outline-none focus:border-[#3b82f6] focus:ring-4 focus:ring-[#3b82f6]/15'
+          className='w-full rounded-lg border border-[#1e293b] bg-[#0a192f] text-white px-3 py-3 outline-none focus:border-primary'
           required={!isEdit}
         />
       </div>
@@ -146,7 +146,7 @@ export default function BlogForm({ id }: { id?: number }) {
           onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
           type='text'
           placeholder='Short description'
-          className='w-full rounded-xl border border-[#123057] bg-[#081127] text-white px-3 py-3 outline-none focus:border-[#3b82f6] focus:ring-4 focus:ring-[#3b82f6]/15'
+          className='w-full rounded-lg border border-[#1e293b] bg-[#0a192f] text-white px-3 py-3 outline-none focus:border-primary'
         />
       </div>
       <div>
@@ -155,7 +155,7 @@ export default function BlogForm({ id }: { id?: number }) {
           onChange={(e) => setForm((f) => ({ ...f, content: e.target.value }))}
           placeholder='Content (supports HTML)'
           rows={10}
-          className='w-full rounded-xl border border-[#123057] bg-[#081127] text-white px-3 py-3 outline-none focus:border-[#3b82f6] focus:ring-4 focus:ring-[#3b82f6]/15'
+          className='w-full rounded-lg border border-[#1e293b] bg-[#0a192f] text-white px-3 py-3 outline-none focus:border-primary'
           required={!isEdit}
         />
       </div>
@@ -163,7 +163,7 @@ export default function BlogForm({ id }: { id?: number }) {
         <select
           value={form.status || 'draft'}
           onChange={(e) => setForm((f) => ({ ...f, status: e.target.value as 'published' | 'draft' }))}
-          className='w-full rounded-xl border border-[#123057] bg-[#081127] text-white px-3 py-3 outline-none focus:border-[#3b82f6] focus:ring-4 focus:ring-[#3b82f6]/15'
+          className='w-full rounded-lg border border-[#1e293b] bg-[#0a192f] text-white px-3 py-3 outline-none focus:border-primary'
         >
           <option value='draft'>draft</option>
           <option value='published'>published</option>
@@ -174,7 +174,7 @@ export default function BlogForm({ id }: { id?: number }) {
           type='file'
           accept='image/*'
           onChange={(e) => setFile(e.target.files?.[0] || null)}
-          className='w-full rounded-xl border border-[#123057] bg-[#081127] text-white px-3 py-3 outline-none'
+          className='w-full rounded-lg border border-[#1e293b] bg-[#0a192f] text-white px-3 py-3 outline-none'
         />
         {previewSrc ? (
           <div className='mt-2'>
@@ -192,16 +192,16 @@ export default function BlogForm({ id }: { id?: number }) {
         <button
           type='submit'
           disabled={saving}
-          className='inline-flex items-center justify-center min-w-[140px] px-4 py-3 rounded-xl border border-[#3b82f6] bg-[#3b82f6] text-darkmode'
+          className='inline-flex items-center justify-center min-w-[140px] px-6 py-2 rounded-xl bg-primary text-white font-bold hover:brightness-110 transition-all'
         >
-          {saving ? 'Saving...' : isEdit ? 'Update Blog' : 'Create Blog'}
+          {saving ? 'Saving...' : isEdit ? 'Update' : 'Create'}
         </button>
         <button
           type='button'
           onClick={() => window.location.href = '/admin/blogs/'}
-          className='inline-flex items-center justify-center min-w-[140px] px-4 py-3 rounded-xl border border-[#123057] bg-transparent text-white'
+          className='inline-flex items-center justify-center min-w-[140px] px-6 py-2 rounded-xl border border-primary text-primary font-bold hover:bg-primary/10 transition-all'
         >
-          Cancel
+          Back
         </button>
       </div>
     </form>

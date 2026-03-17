@@ -125,7 +125,7 @@ export default function AdminBlogsPage() {
                     <td className='p-4'>
                       <div className='flex gap-3'>
                         <a
-                          href={`/admin/blogs/${blog.id}/edit/`}
+                          href={`/admin/blogs/edit/?id=${blog.id}`}
                           className='text-primary hover:underline font-medium'>
                           Edit
                         </a>
