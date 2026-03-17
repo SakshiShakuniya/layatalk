@@ -26,7 +26,9 @@ export default function BlogForm({ id }: { id?: number }) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
-  const previewSrc = useMemo(() => {
+  const [success, setSuccess] = useState(false)
+
+      const previewSrc = useMemo(() => {
     if (file) {
       try {
         return URL.createObjectURL(file)
@@ -82,6 +84,7 @@ export default function BlogForm({ id }: { id?: number }) {
     e.preventDefault()
     setError('')
     setSaving(true)
+      setSuccess(false)
     try {
       const token = localStorage.getItem('token')
       if (!token) {
@@ -89,12 +92,20 @@ export default function BlogForm({ id }: { id?: number }) {
         return
       }
       const fd = new FormData()
-      if (!isEdit || form.title) fd.append('title', form.title || '')
+      
+      // Clearly append all fields
+      fd.append('title', form.title || '')
       fd.append('description', form.description || '')
       fd.append('content', form.content || '')
       fd.append('status', form.status || 'draft')
-      if (file) fd.append('featured_image', file)
-      if (isEdit) fd.append('_method', 'PUT')
+      
+      if (file) {
+        fd.append('featured_image', file)
+      }
+
+      if (isEdit) {
+        fd.append('_method', 'PUT')
+      }
 
       const url = isEdit ? `${API_BASE}/api/admin/blog/${id}` : `${API_BASE}/api/admin/blog`
       const method = 'POST'
@@ -118,7 +129,14 @@ export default function BlogForm({ id }: { id?: number }) {
         setSaving(false)
         return
       }
-      window.location.href = '/admin/blogs/'
+
+      // If update was successful, force a reload to show the new image
+      if (isEdit) {
+        window.location.reload();
+      } else {
+        // If create was successful, redirect
+        window.location.href = '/admin/blogs/'
+      }
     } catch (err: any) {
       console.error('Save blog exception:', err)
       setError(err.message || 'Something went wrong')
@@ -130,6 +148,7 @@ export default function BlogForm({ id }: { id?: number }) {
   return (
     <form onSubmit={onSubmit} className='space-y-4'>
       {error && <div className='text-red-400 text-14'>{error}</div>}
+      {success && <div className='text-green-400 text-14'>Blog updated successfully!</div>}
       <div>
         <input
           value={form.title || ''}

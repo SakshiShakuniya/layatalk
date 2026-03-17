@@ -62,7 +62,14 @@ const Hero = () => {
           </motion.div>
           <motion.div
             {...rightAnimation}
-            className='col-span-7 lg:block hidden'>
+            className='col-span-7 lg:block hidden relative'>
+            <div className='relative w-full sm:h-[550px] h-[450px] flex items-center justify-center pr-10'>
+              <img 
+                src='/images/Frame 34013.png' 
+                alt='Laya Talk App' 
+                className='max-w-[65%] h-auto object-contain z-10'
+              />
+            </div>
           </motion.div>
         </div>
 

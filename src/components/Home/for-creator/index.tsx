@@ -7,17 +7,17 @@ const ForCreator = () => {
     <section className='md:pt-48 sm:pt-28 pt-12' id='for-creator'>
       <div className='container px-4 sm:px-6'>
         <div className='grid lg:grid-cols-2 items-center gap-20'>
-          <motion.div
-            whileInView={{ y: 0, opacity: 1 }}
-            initial={{ y: '-100%', opacity: 0 }}
-            transition={{ duration: 0.6 }}
-            className='lg:-ml-32'>
-          </motion.div>
+          <div className='lg:-ml-32 relative'>
+            <div className='relative w-full sm:h-[450px] h-[350px] flex items-center justify-center'>
+              <img 
+                src='/images/Frame 34014 (4).png' 
+                alt='For Creators' 
+                className='max-w-[65%] h-auto object-contain'
+              />
+            </div>
+          </div>
 
-          <motion.div
-            whileInView={{ y: 0, opacity: 1 }}
-            initial={{ y: '100%', opacity: 0 }}
-            transition={{ duration: 0.6 }}>
+          <div>
             <p className='sm:text-30 text-20 text-muted mb-3'>
               For <span className='text-primary'>Creator</span>
             </p>
@@ -67,7 +67,7 @@ const ForCreator = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

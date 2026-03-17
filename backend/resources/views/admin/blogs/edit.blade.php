@@ -16,6 +16,7 @@
 <body>
     <div class="wrap">
         <h1>Edit Blog</h1>
+        <div id="preview" style="margin-bottom: 20px;"></div>
         <form id="form">
             <input id="title" placeholder="Title" required />
             <textarea id="description" placeholder="Description"></textarea>
@@ -43,6 +44,16 @@
             document.getElementById('description').value = b.description || '';
             document.getElementById('content').value = b.content || '';
             document.getElementById('status').value = b.status || 'draft';
+            
+            if (b.featured_image) {
+                const img = document.createElement('img');
+                img.src = b.featured_image;
+                img.style.maxWidth = '100%';
+                img.style.borderRadius = '8px';
+                const p = document.getElementById('preview');
+                p.innerHTML = '<p>Current Image:</p>';
+                p.appendChild(img);
+            }
         }
         document.getElementById('form').addEventListener('submit', async (e) => {
             e.preventDefault();

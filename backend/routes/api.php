@@ -5,7 +5,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\AdminAuthController;
 
 Route::get('/blogs', [BlogController::class, 'indexPublic']);
-Route::get('/blog/{slug}', [BlogController::class, 'showBySlug']);
+Route::get('/blogs/{slug}', [BlogController::class, 'showBySlug']);
 
 Route::post('/admin/login', [AdminAuthController::class, 'login']);
 

@@ -1,6 +1,6 @@
 'use client'
 import { useSearchParams } from 'next/navigation'
-import EditBlogClient from './EditBlogClient'
+import EditBlogClient from '@/app/admin/blogs/edit/EditBlogClient'
 import { Suspense } from 'react'
 
 function EditBlogPageContent() {

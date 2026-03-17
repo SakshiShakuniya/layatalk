@@ -38,7 +38,7 @@ export default function AdminDashboardPage() {
 
   const handleLogout = () => {
     localStorage.removeItem('token')
-    window.location.href = '/'
+    window.location.replace('/')
   }
 
   return (

@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react'
 
 const Features = () => {
   const ref = useRef(null)
-  const inView = useInView(ref)
+  const inView = useInView(ref, { once: true })
 
   const TopAnimation = {
     initial: { y: '-100%', opacity: 0 },
@@ -50,7 +50,14 @@ const Features = () => {
               ))}
             </div>
           </motion.div>
-          <motion.div {...TopAnimation} className='lg:col-span-5 col-span-12'>
+          <motion.div {...TopAnimation} className='lg:col-span-5 col-span-12 relative'>
+            <div className='relative w-full sm:h-[600px] h-[450px] flex items-center justify-center'>
+              <img 
+                src='/images/pngwing.com_19.png' 
+                alt='Features' 
+                className='max-w-full h-auto object-contain'
+              />
+            </div>
           </motion.div>
         </div>
       </div>

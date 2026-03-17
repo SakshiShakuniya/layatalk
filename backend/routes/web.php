@@ -8,10 +8,16 @@ use App\Http\Controllers\AdminPageController;
 
 // 1. Temporary route to clear server cache (Visit layatalk.com/clear)
 Route::get('/clear', function() {
+    Artisan::call('config:clear');
     Artisan::call('route:clear');
     Artisan::call('cache:clear');
     Artisan::call('view:clear');
-    return "All caches cleared successfully! <br><br> <a href='/'>Go to Home</a>";
+    try {
+        Artisan::call('storage:link');
+        return "All caches cleared and storage linked successfully! <br><br> <a href='/'>Go to Home</a>";
+    } catch (\Exception $e) {
+        return "All caches cleared, but storage link failed: " . $e->getMessage() . " <br><br> <a href='/'>Go to Home</a>";
+    }
 });
 
 // 2. Main route to serve Next.js Frontend from public_html

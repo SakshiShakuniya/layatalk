@@ -1,3 +1,5 @@
+'use client'
+import { motion } from 'framer-motion'
 import { Icon } from '@iconify/react'
 
 const ForFans = () => {
@@ -5,7 +7,11 @@ const ForFans = () => {
     <section className='md:py-40 py-20 scroll-mt-32 md:scroll-mt-40' id='for-fans'>
       <div className='container px-4'>
         <div className='grid lg:grid-cols-2 sm:gap-0 gap-10 items-center'>
-          <div>
+          <motion.div
+            whileInView={{ y: 0, opacity: 1 }}
+            initial={{ y: '100%', opacity: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}>
              <p className='sm:text-30 text-20 text-muted mb-3'>
               For <span className='text-primary'>Fans</span>
             </p>
@@ -61,12 +67,21 @@ const ForFans = () => {
                 </div>
               </div>
             </div>
-          </div>
-          <div>
-            <div className=''>
-              
-            </div>
-          </div>
+          </motion.div>
+          <motion.div
+            whileInView={{ y: 0, opacity: 1 }}
+            initial={{ y: '-100%', opacity: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className='relative'>
+            <div className='relative w-full sm:h-[450px] h-[400px] flex items-center justify-center'>
+                <img 
+                 src='/images/Frame 34013 copy.png' 
+                 alt='For Fans' 
+                 className='max-w-[65%] h-auto object-contain'
+               />
+             </div>
+           </motion.div>
         </div>
       </div>
     </section>

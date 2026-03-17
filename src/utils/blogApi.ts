@@ -47,7 +47,7 @@ export async function fetchBlogs(): Promise<ApiBlog[]> {
 }
 
 export async function fetchBlogBySlug(slug: string): Promise<ApiBlog | null> {
-  const res = await fetch(`${API_BASE}/api/blog/${encodeURIComponent(slug)}`, { 
+  const res = await fetch(`${API_BASE}/api/blogs/${encodeURIComponent(slug)}`, { 
     cache: 'no-store',
     headers: {
       'Accept': 'application/json'

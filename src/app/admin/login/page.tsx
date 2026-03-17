@@ -41,7 +41,7 @@ export default function AdminLoginPage() {
       } else {
         localStorage.removeItem('admin_email')
       }
-      window.location.href = '/admin/dashboard/'
+      window.location.replace('/admin/dashboard/')
     } catch (err) {
       console.error('Login error:', err)
       setMsg('Connection error: ' + (err as any).message)

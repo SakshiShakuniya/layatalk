@@ -54,7 +54,7 @@ class BlogController extends Controller
 
             if ($request->hasFile('featured_image')) {
                 $path = $request->file('featured_image')->store('blogs', 'public');
-                $data['featured_image'] = '/storage/' . $path;
+                $data['featured_image'] = Storage::disk('public')->url($path);
                 Log::info('Stored new image', ['path' => $data['featured_image']]);
             }
 
@@ -108,6 +108,7 @@ class BlogController extends Controller
         }
 
         if ($request->hasFile('featured_image')) {
+            Log::info('Update: File detected.');
             // Delete old image if it exists
             if ($blog->featured_image) {
                 $oldPath = parse_url($blog->featured_image, PHP_URL_PATH);
@@ -119,11 +120,17 @@ class BlogController extends Controller
                 }
             }
 
-            // Store new image
-            $path = $request->file('featured_image')->store('blogs', 'public');
-            // Store relative path in database
-            $data['featured_image'] = '/storage/' . $path;
-            Log::info('Stored new image', ['path' => $data['featured_image']]);
+            try {
+                // Store new image
+                $path = $request->file('featured_image')->store('blogs', 'public');
+                // Generate absolute URL
+                $data['featured_image'] = Storage::disk('public')->url($path);
+                Log::info('Update: Stored new image successfully', ['path' => $data['featured_image']]);
+            } catch (\Exception $e) {
+                Log::error('Update: Failed to store new image.', ['error' => $e->getMessage()]);
+            }
+        } else {
+            Log::info('Update: No file detected in the request.');
         }
 
         $blog->update($data);

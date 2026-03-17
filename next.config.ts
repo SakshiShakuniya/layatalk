@@ -1,12 +1,11 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  output: 'export',
-  distDir: 'out',
   trailingSlash: true,
   reactStrictMode: true,
   images: {
     unoptimized: true,
+    qualities: [75, 100],
     remotePatterns: [
       { protocol: 'http', hostname: '**' },
       { protocol: 'https', hostname: '**' },

@@ -57,11 +57,14 @@ const Header: React.FC = () => {
             ))}
           </nav>
           <div className='flex items-center gap-4'>
+            {/* Admin button hidden as requested */}
+            {/* 
             <a
               href={isLoggedIn ? '/admin/dashboard/' : '/admin/login/'}
               className='lg:block text-white hover:text-primary px-3 py-2 rounded-lg border border-transparent hover:border-primary transition-colors'>
               {isLoggedIn ? 'Dashboard' : 'Admin'}
             </a>
+            */}
             <Link
               href='https://play.google.com/store/apps/details?id=com.ahaagroup.ahaavoice&hl=en_IN'
               target='_blank'
@@ -107,11 +110,14 @@ const Header: React.FC = () => {
                 className='bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 block text-center mb-3'>
                 Get the App
               </Link>
+              {/* Admin button hidden as requested */}
+              {/* 
               <a
                 href={isLoggedIn ? '/admin/dashboard/' : '/admin/login/'}
                 className='text-white px-4 py-2 rounded-lg border border-primary/50 block text-center admin-button transition-colors'>
                 {isLoggedIn ? 'Dashboard' : 'Admin'}
               </a>
+              */}
             </div>
           </nav>
         </div>
